@@ -1,0 +1,123 @@
+/* welcome_section */
+#welcome_section {
+    height: 82vh;  
+    position: relative;
+    overflow: hidden;
+    background-color: #04132a;
+}
+#triangle-img {
+    position: absolute;
+    bottom: 0;
+    width: 90%;
+}
+#ai-painter-img {
+    float: right;
+    height: 100%;
+    margin-right: -22rem;
+}
+#title-circle-img {
+    position: absolute;
+    z-index: 1;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 18rem;
+    max-width: 90%;
+    margin-bottom: 3rem;
+    max-height: 99%;
+}
+@media (min-width: 576px) {
+    #triangle-img {
+        width: 75%;
+    }
+    #ai-painter-img {
+        margin-right: -20rem;
+    }
+}
+@media (min-width: 768px) {
+    #welcome_section {
+        height: 89vh;  
+    }
+    #triangle-img {
+        width: 58%;
+    }
+    #title-circle-img {
+        width: 25rem;
+        left: 3rem;
+        right: unset;
+    }
+    #ai-painter-img {
+        margin-right: -14rem;
+    }
+}
+@media (min-width: 1200px) {
+    #title-circle-img {
+        width: 30rem;
+        left: 5rem;
+        margin-bottom: 5rem;
+    }
+}
+@media (min-width: 1400px) {
+    #triangle-img {
+        width: unset;
+        height: 100%;
+    }
+    #ai-painter-img {
+        margin-right: 0;
+    }
+    #title-circle-img {
+        left: 8rem;
+        margin-bottom: 8rem;
+    }
+}
+
+/* about_section */
+#about_section { 
+    position: relative;
+    overflow: hidden;
+}
+#about p {
+    background-color: #ffffffd6;
+}
+#side-lines-rigth-img {
+    position: absolute;
+    right: 0;
+    height: 100%;
+    z-index: -1;
+}
+.carousel-caption {
+    display: block;
+    position: static !important;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #ffffffd6;
+    color: black !important;
+    margin-top: 1.25rem;
+    border-radius: var(--bs-border-radius-lg);
+    padding: 1.25rem;
+    width: fit-content;
+}
+.carousel-inner {
+    overflow: visible !important;
+}
+.carousel-item img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 100%;
+    max-width: 100%;
+    border-radius: var(--bs-border-radius-lg)
+}
+.carousel-control-next, 
+.carousel-control-prev {
+    margin-bottom: 8rem;
+}
+
+@media (min-width: 1400px) {
+    #about p {
+        width: 50%;
+        background-color: unset;
+    }
+}

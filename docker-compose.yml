@@ -5,7 +5,7 @@ services:
     volumes:
       - .:/rujourney
     ports:
-      - 8000:8000
+      - 80:8000
     env_file:
       - ./.env.prod
     command: >
@@ -16,7 +16,6 @@ services:
       - db
       - minio
       - redis
-
   db:
     image: postgres:latest
     restart: always
@@ -26,12 +25,6 @@ services:
       - postgres_backup:/backups
     env_file:
       - ./.env.prod
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 4G
-
   minio:
     image: minio/minio:latest
     container_name: minio
@@ -46,7 +39,6 @@ services:
     ports:
       - 9000:9000
       - 9001:9001
-
   create_buckets:
     image: minio/mc:latest
     depends_on:
@@ -58,7 +50,6 @@ services:
       /usr/bin/mc anonymous set download minio/rujourney-pictures;
       exit 0;
       '
-
   celery:
     build: .
     container_name: celery
@@ -71,13 +62,11 @@ services:
     depends_on:
       - app
       - redis
-
   redis:
     image: redis:latest
     container_name: redis
     volumes:
       - redis_data:/data
-
 volumes:
   minio:
   redis_data:
