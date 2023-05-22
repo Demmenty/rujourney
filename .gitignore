@@ -1,0 +1,15 @@
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+media/
+static/
+staticfiles
+.env
+.env.dev
+.venv
+.venv/
+work_notes
+rujourney/local_settings.py

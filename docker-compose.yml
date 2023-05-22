@@ -1,0 +1,89 @@
+# TODO настроить healthcheck и resources
+
+services:
+  app:
+    build: .
+    container_name: rujourney
+    volumes:
+      - .:/rujourney
+    ports:
+      - 80:8000
+    env_file:
+      - ./.env.dev
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - db
+      - minio
+      - redis
+
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    container_name: postgres
+    volumes:
+      - postgres_data:/data
+      - postgres_backup:/backups
+    env_file:
+      - ./.env.dev
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    hostname: minio
+    command: server /minio_files --console-address ":9001"
+    restart: unless-stopped
+    volumes:
+      - .:/minio_data
+      - minio:/data
+    env_file:
+      - ./.env.dev
+    ports:
+      - 9000:9000
+      - 9001:9001
+
+  create_buckets:
+    image: minio/mc:latest
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c '
+      /usr/bin/mc alias set minio http://minio:9000 admin password;
+      /usr/bin/mc mb minio/rujourney-pictures;
+      /usr/bin/mc anonymous set download minio/rujourney-pictures;
+      exit 0;
+      '
+      
+# celery worker используется для запуска воркера Celery;
+# --app=celeryapp используется для запуска celeryapp приложения Celery;
+
+  celery:
+    build: .
+    container_name: celery
+    command: celery --app=rujourney worker --loglevel=info
+    volumes:
+      - .:/rujourney
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - app
+      - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    volumes:
+      - redis_data:/data
+
+volumes:
+  minio:
+  redis_data:
+  postgres_data:
+  postgres_backup:

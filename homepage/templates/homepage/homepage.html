@@ -1,0 +1,76 @@
+{% extends 'homepage/homepage_layout.html' %}
+{% load static %}
+
+{% block title %}Rujourney{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'homepage/css/homepage.css' %}">
+{% endblock %}
+
+{% block content %}
+<section id="welcome_section">
+    <img src="{% static 'homepage/img/AI_painter.png' %}" id="ai-painter-img">
+    <img src="{% static 'homepage/img/triangle.svg' %}" id="triangle-img">
+    <img src="{% static 'homepage/img/title_circle.svg' %}" id="title-circle-img">
+</section>
+<section id="about_section">
+    <img src="{% static 'homepage/img/side-lines-rigth.svg' %}" id="side-lines-rigth-img">
+    <div class="container my-5">
+        <div class="d-flex flex-column" id="about">
+            <span class="header rounded-pill mb-4">О сервисе</span>
+            <br>
+            <p class="rounded-3 fs-5 p-3">
+                Наш сервис предоставляет обширные возможности для генерации картин с помощью искусственного интеллекта.<br><br>
+                Если у вас нет таланта в художественном искусстве, попробуйте себя в формулировании запроса нашей нейросети:
+                она нарисует изображение быстро, качественно и в разных вариантах.<br>
+                А если есть - искусственный интеллект поможет вам получить оригинальные идеи, решения и найти вдохновение.<br><br>
+                Достаточно предоставить описание желаемого изображения и наслаждаться результатом.
+            </p>
+        </div>
+        <br><br>
+        <div class="d-flex flex-column" id="demo">
+            <span class="header rounded-pill mb-4">Примеры картин</span>
+            <br>
+            <div id="carouselExampleCaptions" class="carousel slide pb-5" data-bs-ride="carousel">
+                <div class="carousel-indicators mt-5">
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner rounded-3">
+                <div class="carousel-item active">
+                    <img src="{% static 'homepage/img/example1.png' %}">
+                    <div class="carousel-caption">
+                    <span>Пример запроса1</span>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'homepage/img/example2.png' %}">
+                    <div class="carousel-caption">
+                    <span>{% lorem %}</span>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <img src="{% static 'homepage/img/example3.png' %}">
+                    <div class="carousel-caption">
+                    <span>Пример запроса3</span>
+                    </div>
+                </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Предыдущий</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Следующий</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'homepage/js/homepage.js' %}"></script>
+{% endblock %}

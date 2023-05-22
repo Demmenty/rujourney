@@ -1,0 +1,89 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{% static 'homepage/img/logo_ico.svg' %}" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'personal_account/css/personal_account_layout.css' %}">
+  {% block stylesheet %}{% endblock %}
+  <title>{% block title %}{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <header>
+    <div class="container">
+      <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-4 pt-3 pb-0">
+
+        <div class="header-refs d-flex align-items-center gap-4">
+          <a href="/" class="link">
+            <img src="{% static 'homepage/img/logo.svg' %}" width="50" id="logo-img">
+          </a>
+          <a href="/" class="link d-none d-md-block">Rujourney</a>
+        </div>
+
+        <div class="dropdown text-end">
+          <a href="#" class="d-flex align-items-center gap-3 link dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"></path>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"></path>
+            </svg>
+            <span class="link">{{ user.username }}</span>
+          </a>
+          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+            <li>
+              <form method="POST" action="{% url 'logout' %}" class="form-inline">
+                {% csrf_token %}
+                <input type="Submit" title="Выйти" value="Выйти" class="dropdown-item">
+              </form> 
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <img src="{% static 'homepage/img/gradient_line.svg' %}" id="header-line-img">
+  </header>
+
+  <main>
+    {% block content %}
+    {% endblock %}
+
+    <!-- общие уведомления -->
+    <div class="alert success-alert" role="alert" id="success-alert">
+      <div class="alert-content">
+        <img class="icon-check" src="{% static 'personal_account/img/check-circle.svg' %}">
+        <div class="alert-message">
+          <b>Успех</b>
+          <span class="text text-secondary"></span>
+        </div>
+        <button type="button" class="btn-close"></button>
+      </div>
+    </div>
+    <div class="alert danger-alert" role="alert" id="danger-alert">
+      <div class="alert-content">
+        <img class="icon-check" src="{% static 'personal_account/img/exclamation-circle.svg' %}">
+        <div class="alert-message">
+          <b>Ошибка</b>
+          <span class="text text-secondary"></span>
+        </div>
+        <button type="button" class="btn-close"></button>
+      </div>
+    </div>
+    
+  </main>
+
+  <footer>
+  </footer>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="{% static 'personal_account/js/personal_account_layout.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+{% block script %}{% endblock %}
+</html>
