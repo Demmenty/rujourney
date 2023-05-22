@@ -14,3 +14,4 @@ work_notes
 rujourney/local_settings.py
 .env.prod
 docker-compose.dev.yml
+pyproject.toml
