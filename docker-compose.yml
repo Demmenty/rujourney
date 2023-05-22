@@ -1,5 +1,3 @@
-# TODO настроить healthcheck и resources
-
 services:
   app:
     build: .
@@ -7,9 +5,9 @@ services:
     volumes:
       - .:/rujourney
     ports:
-      - 80:8000
+      - 8000:8000
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              python manage.py migrate &&
@@ -21,13 +19,13 @@ services:
 
   db:
     image: postgres:latest
-    restart: unless-stopped
+    restart: always
     container_name: postgres
     volumes:
       - postgres_data:/data
       - postgres_backup:/backups
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     deploy:
       resources:
         limits:
@@ -44,7 +42,7 @@ services:
       - .:/minio_data
       - minio:/data
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     ports:
       - 9000:9000
       - 9001:9001
@@ -60,18 +58,16 @@ services:
       /usr/bin/mc anonymous set download minio/rujourney-pictures;
       exit 0;
       '
-      
-# celery worker используется для запуска воркера Celery;
-# --app=celeryapp используется для запуска celeryapp приложения Celery;
 
   celery:
     build: .
     container_name: celery
+    restart: always
     command: celery --app=rujourney worker --loglevel=info
     volumes:
       - .:/rujourney
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     depends_on:
       - app
       - redis
