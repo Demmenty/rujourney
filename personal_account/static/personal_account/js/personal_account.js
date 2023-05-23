@@ -331,39 +331,27 @@ function saveImageToCollection() {
 
     request.done(function(response) {
         showSuccessAlert("Картина сохранена в коллекцию");
+        // деактивация кнопки сохранения
         $("#save-prompt-result-btn").addClass("disabled");
-        // добавить картину на страницу в окно коллекции
-        // TODO
-        console.log("response", response);
-
-        let data = response.responseJSON.generated_image;
-
-        let imageID = data.id;
-        let thumbnailURL = data.thumbnail.url;
-        let imageURL = data.image.url;
-        let imagePrompt = data.prompt;
-        let imageNegPrompt = data.neg_prompt;
-
+        // добавление в окно коллекции
         let new_preview = $(
             '<div class="generated-image-preview"' + 
-            'id="generated-image-preview-' + imageID + '"></div>'
+            'id="generated-image-preview-' + response.id + '"></div>'
         ).append(
-            $('<img src="' + thumbnailURL + '" data-bs-toggle="modal" '+
-            'data-bs-target="#generated-image-modal-' + imageID + '">')
+            $('<img src="' + response.thumbnail_url + '" data-bs-toggle="modal" '+
+            'data-bs-target="#generated-image-modal-' + response.id + '">')
         )
-
         let new_modal = $(".generated-image-modal.blank").clone();
-        new_modal.attr("id", "generated-image-modal-"+imageID);
-        new_modal.attr("data-id", imageID);
-        new_modal.find(".generated-image").attr("src", imageURL);
-        new_modal.find(".prompt").text(imagePrompt);
-        if (imageNegPrompt) {
-            new_modal.find(".neg_prompt").text(imageNegPrompt);
+        new_modal.attr("id", "generated-image-modal-" + response.id);
+        new_modal.attr("data-id", response.id);
+        new_modal.find(".generated-image").attr("src", response.image_url);
+        new_modal.find(".prompt").text(response.prompt);
+        if (response.neg_prompt) {
+            new_modal.find(".neg_prompt").text(response.neg_prompt);
         }
         else {
             new_modal.find(".neg_prompt").closest("p").remove();
         }
-        
         $("#collection-content").prepend(new_modal);
         $("#collection-content").prepend(new_preview);
         $(".repeat-saved-prompt-btn").on("click", repeatPromptFromCollection);

@@ -17,12 +17,18 @@ from personal_account.models import GeneratedImage
 def save_generated_image(request):
     """Сохраняет результат генерации картины пользователя в бд"""
 
-    form = GeneratedImageForm(request.POST)
+    form = GeneratedImageForm(request.POST, request.FILES)
 
     if form.is_valid():
         generated_image: GeneratedImage = form.save()
 
-        data = {"generated_image": generated_image}
+        data = {
+            "id": generated_image.id,
+            "prompt": generated_image.prompt,
+            "neg_prompt": generated_image.neg_prompt,
+            "thumbnail_url": generated_image.thumbnail.url,
+            "image_url": generated_image.image.url,
+        }
         return JsonResponse(data, status=200)
 
     return HttpResponseBadRequest("Некорректные данные формы")
