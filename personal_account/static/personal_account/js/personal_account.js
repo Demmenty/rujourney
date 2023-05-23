@@ -81,6 +81,12 @@ function repeatPromptFromCollection() {
     // запускает генерацию новой картины на основе сохраненной
     console.log("repeatPromptFromCollection");
 
+    // проверка, что генерация не идет уже
+    if (!$("#loader_section").hasClass("hidden")) {
+        showDangerAlert("Дождитесь окончания генерации!");
+        return;
+    }
+
     let modal = $(this).closest(".generated-image-modal");
     let prompt = modal.find(".prompt").text();
     let neg_prompt = modal.find(".neg_prompt").text();
