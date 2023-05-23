@@ -128,6 +128,7 @@ STATICFILES_DIRS = [
 
 # параметры хранилища
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 
 MINIO_ACCESS_KEY = os.getenv("MINIO_ROOT_USER")
 MINIO_SECRET_KEY = os.getenv("MINIO_ROOT_PASSWORD")
