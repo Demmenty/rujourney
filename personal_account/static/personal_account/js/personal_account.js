@@ -333,12 +333,13 @@ function saveImageToCollection() {
     // сохраняет результат генерации в коллекцию пользователя
     console.log("saveImageToCollection");
 
+    // деактивация кнопки сохранения
+    $("#save-prompt-result-btn").addClass("disabled");
+
     let request = saveImageRequest();
 
     request.done(function(response) {
         showSuccessAlert("Картина сохранена в коллекцию");
-        // деактивация кнопки сохранения
-        $("#save-prompt-result-btn").addClass("disabled");
         // добавление в окно коллекции
         let new_preview = $(
             '<div class="generated-image-preview"' + 
@@ -366,6 +367,7 @@ function saveImageToCollection() {
     });
 
     request.fail(function(response) {
+        $("#save-prompt-result-btn").removeClass("disabled");
         showDangerAlert(response.status + " " + response.responseText);
     });
 }
