@@ -49,7 +49,7 @@ function saveImageRequest() {
     return $.ajax({
         data: formData,
         type: "POST",
-        url: "/personal_account/ajax/delete_generated_image",
+        url: "/personal_account/ajax/save_generated_image",
         cache: false,
         contentType: false,
         processData: false,
