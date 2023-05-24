@@ -337,7 +337,7 @@ function saveImageToCollection() {
     console.log("saveImageToCollection");
 
     // деактивация кнопки сохранения
-    $("#save-prompt-result-btn").addClass("disabled");
+    $(this).addClass("disabled");
 
     let request = saveImageRequest();
 
@@ -364,8 +364,8 @@ function saveImageToCollection() {
         }
         $("#collection-content").prepend(new_modal);
         $("#collection-content").prepend(new_preview);
-        $(".repeat-saved-prompt-btn").on("click", repeatPromptFromCollection);
-        $(".delete-saved-image-btn").on("click", deleteImageFromCollection);
+        new_modal.find(".repeat-saved-prompt-btn").on("click", repeatPromptFromCollection);
+        new_modal.find(".delete-saved-image-btn").on("click", deleteImageFromCollection);
         $("#collection_section").removeClass("hidden");
     });
 
