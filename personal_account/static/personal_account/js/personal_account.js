@@ -97,7 +97,9 @@ function repeatPromptFromCollection() {
     modal.find(".btn-close").trigger("click");
     $("#prompt_section").addClass("hidden");
     $("#result_section").addClass("hidden");
+    $("#result_error").addClass("hidden");
     $("#loader_section").removeClass("hidden");
+    $("#result_image img").remove();
 
     runTask_Processing();
 }
@@ -109,6 +111,7 @@ function runTask_Processing() {
     console.log("runTask_Processing");
 
     let request = sendNewPromptRequest();
+    $("#generation_status").text(" ");
 
     request.done(function(response) {
         $("#generation_status").text("Заявка на генерацию отправлена...");
@@ -213,7 +216,7 @@ function getTaskResult_CheckStatus(taskID, orderID) {
             $("#generation_status").text("Картина в процессе генерации...");
         }
         else {
-            let queue_place = response.task_result.order_status.split(" ")[-1];
+            let queue_place = response.task_result.order_status.split(" ").pop();
             $("#generation_status").text("Картина в очереди... Место: " + queue_place);
         }
         setTimeout(function() {
