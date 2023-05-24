@@ -1,6 +1,7 @@
 $(document).ready(function () {
     $("#new_prompt_form").on("submit", startNewGeneration);
     $("#repeat-prompt-btn").on("click", startNewGeneration);
+    $("#edit-prompt-btn").on("click", editPromptSection);
     $("#reset-prompt-btn").on("click", resetPromptSection);
     $("#save-prompt-result-btn").on("click", saveImageToCollection);
     $(".repeat-saved-prompt-btn").on("click", repeatPromptFromCollection);
@@ -318,16 +319,26 @@ function showImgGenError(error) {
     $("#result_section").removeClass("hidden");
 }
 
+function editPromptSection() {
+    // показывает окно промта для редактирования
+
+    $("#result_section").addClass("hidden");
+    $("#result_error").addClass("hidden");
+    $("#save-prompt-result-btn").removeClass("hidden disabled");
+    $("#result_image img").remove();
+    $("#prompt_section").removeClass("hidden");
+}
+
 function resetPromptSection() {
     // возвращает окна к изначальному состоянию для нового запроса
 
     $("#new_prompt_form").trigger("reset");
-    $("#prompt_section").removeClass("hidden");
     $("#result_section").addClass("hidden");
     $("#result_neg_prompt").addClass("hidden");
     $("#result_error").addClass("hidden");
     $("#save-prompt-result-btn").removeClass("hidden disabled");
     $("#result_image img").remove();
+    $("#prompt_section").removeClass("hidden");
 }
 
 
