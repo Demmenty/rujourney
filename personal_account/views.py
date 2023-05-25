@@ -13,7 +13,14 @@ def personal_account(request):
 
     template = "personal_account/personal_account.html"
 
-    collection = GeneratedImage.objects.filter(author=request.user)
+    gen_imgs = GeneratedImage.objects.filter(author=request.user)
+
+    collection = {}
+    for img in gen_imgs:
+        if collection.get(img.prompt):
+            collection[img.prompt].append(img)
+        else:
+            collection[img.prompt] = [img]
 
     data = {
         "user": request.user,

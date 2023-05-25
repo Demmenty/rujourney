@@ -92,29 +92,52 @@ main {
     justify-content: space-around;
     align-content: space-around;
     align-items: center;
-    gap: 10px;
+    column-gap: 10px;
+    row-gap: 30px;
+    padding-bottom: 2rem;
 }
-.generated-image-preview {
+.generated-image-group-preview {
     border-radius: 10px;
-    max-width: 48%; 
+    width: 46%; 
+    position: relative;
 }
-.generated-image-preview img {
+.generated-image-group-preview img {
     border-radius: 10px;
-    width: 100%;
-    box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
-    -moz-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
-    -webkit-box-shadow: 0px 0px 1px 0px rgb(0 0 0 / 25%), 0px 1px 6px rgb(0 0 0 / 23%);
+    width: 90%;
+    box-shadow: 0px 0px 4px 0px #00000066, 0px 1px 4px #0000006b;
+    -moz-box-shadow: 0px 0px 4px 0px #00000066, 0px 1px 4px #0000006b;
+    -webkit-box-shadow: 0px 0px 4px 0px #00000066, 0px 1px 4px #0000006b;
 }
-.generated-image-preview img:hover {
+.generated-image-group-preview:hover img {
     cursor: pointer;
-    box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 40%), 0px 1px 8px 1px rgb(0 0 0 / 40%);
-    -moz-box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 40%), 0px 1px 8px 1px rgb(0 0 0 / 40%);
-    -webkit-box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 40%), 0px 1px 8px 1px rgb(0 0 0 / 40%);
+    box-shadow: 0px 0px 6px 0px #00000088, 0px 1px 4px #000000b3;
+    -moz-box-shadow: 0px 0px 6px 0px #00000088, 0px 1px 4px #000000b3;
+    -webkit-box-shadow: 0px 0px 6px 0px #00000088, 0px 1px 4px #000000b3;
 }
-.generated-image-modal .modal-dialog {
+.generated-image-group-preview img:nth-child(1) {
+    z-index: 3;
+    position: relative;
+}
+.generated-image-group-preview img:nth-child(2) {
+    z-index: 2;
+    filter: contrast(0.5);
+    left: 0.5rem;
+    top: 0.5rem;
+    position: absolute;
+}
+.generated-image-group-preview img:nth-child(3) {
+    filter: contrast(0.5);
+    left: 1rem;
+    top: 1rem;
+    position: absolute;
+}
+.generated-image-group-preview img:nth-child(n+4) {
+    display:none;
+}
+.generated-image-group-modal .modal-dialog {
     max-width: min-content;
 }
-.generated-image-modal .modal-content {
+.generated-image-group-modal .modal-content {
     padding: 1rem;
     background-color: #1b1225;
     color: white;
@@ -122,15 +145,16 @@ main {
     -moz-box-shadow: 0px 0px 10px 1px #ee9fff;
     -webkit-box-shadow: 0px 0px 10px 1px #ee9fff;
 }
-.generated-image-modal .btn-close {
+.generated-image-group-modal .btn-close {
     padding: 0.75em;
     border-radius: 2rem;
     opacity: 0.3;
     background-color: white;
     position: absolute;
     right: 1rem;
+    z-index: 3;
 }
-.generated-image-modal p {
+.generated-image-group-modal p {
     text-align: center;
 }
 .generated-image-container {
@@ -138,7 +162,7 @@ main {
     width: max-content;
     margin-bottom: 1rem;
 }
-.generated-image {
+.generated-image-container img {
     width: 100%;
     max-width: 85vw;
     max-height: 100vh;
@@ -148,23 +172,27 @@ main {
     gap: 1.5rem;
     justify-content: flex-end;
 }
+.carousel-control-next, 
+.carousel-control-prev {
+    max-width: 4rem;
+    margin-bottom: 8rem;
+    margin-top: 4rem;
+}
 
 @media (min-width: 576px) {
-    .generated-image-preview {
+    .generated-image-group-preview {
         max-width: 31%; 
     }
-    .generated-image-modal .modal-content {
+    .generated-image-group-modal .modal-content {
         margin-left: 5px;
         margin-right: 5px;
     }
-    .generated-image {
-        width: 100%;
+    .generated-image-container img {
         max-width: 92vw;
-        max-height: 100vh;
     }
 }
 @media (min-width: 992px) {
-    .generated-image-preview {
+    .generated-image-group-preview {
         max-width: 18%; 
     }
 }

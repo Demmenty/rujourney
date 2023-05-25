@@ -6,6 +6,7 @@ $(document).ready(function () {
     $("#save-prompt-result-btn").on("click", saveImageToCollection);
     $(".repeat-saved-prompt-btn").on("click", repeatPromptFromCollection);
     $(".delete-saved-image-btn").on("click", deleteImageFromCollection);
+    controlArrowsInModalGroups();
 })
 
 const csrf_token = $("#new_prompt_form input[name='csrfmiddlewaretoken']").val();
@@ -88,14 +89,14 @@ function repeatPromptFromCollection() {
         return;
     }
 
-    let modal = $(this).closest(".generated-image-modal");
-    let prompt = modal.find(".prompt").text();
-    let neg_prompt = modal.find(".neg_prompt").text();
+    let cur_item = $(this).closest(".carousel-item");
+    let prompt = cur_item.find(".prompt").text();
+    let neg_prompt = cur_item.find(".neg_prompt").text();
 
     $("#id_prompt").val(prompt);
     $("#id_neg_prompt").val(neg_prompt);
 
-    modal.find(".btn-close").trigger("click");
+    $(this).closest(".modal").find(".btn-close").trigger("click");
     $("#prompt_section").addClass("hidden");
     $("#result_section").addClass("hidden");
     $("#result_error").addClass("hidden");
@@ -354,30 +355,70 @@ function saveImageToCollection() {
 
     request.done(function(response) {
         showSuccessAlert("Картина сохранена в коллекцию");
-        // добавление в окно коллекции
-        let new_preview = $(
-            '<div class="generated-image-preview"' + 
-            'id="generated-image-preview-' + response.id + '"></div>'
-        ).append(
-            $('<img src="' + response.thumbnail_url + '" data-bs-toggle="modal" '+
-            'data-bs-target="#generated-image-modal-' + response.id + '">')
-        )
-        let new_modal = $(".generated-image-modal.blank").clone();
-        new_modal.attr("id", "generated-image-modal-" + response.id);
-        new_modal.attr("data-id", response.id);
-        new_modal.find(".generated-image").attr("src", response.image_url);
-        new_modal.find(".prompt").text(response.prompt);
-        if (response.neg_prompt) {
-            new_modal.find(".neg_prompt").text(response.neg_prompt);
+
+        let group_exist = false;
+        let new_preview = $('<img src="" id="">');
+        new_preview.attr("src", response.thumbnail_url);
+        new_preview.attr("id", "generated-image-preview-" + response.id);
+        
+        // если такой промт уже был - вставляем в существующую группу
+        $(".generated-image-group-preview").each(function() {
+            if ($(this).attr("data-prompt") == response.prompt) {
+                group_exist = true;
+                let group_preview = $(this);
+                group_preview.prepend(new_preview);
+                
+                let counter = group_preview.attr("id").slice(8);
+                let group_modal = $('#modal-' + counter);
+                group_modal.find(".active").removeClass("active");
+
+                let new_item = $(".generated-image-group-modal.blank .carousel-item").clone();
+                fillNewItem(new_item, response);
+                group_modal.find(".carousel-inner").append(new_item);
+
+                group_modal.find(".carousel-control-prev").show();
+                group_modal.find(".carousel-control-next").show();
+                return;
+            }
+        })
+        // если такого промта еще не было - делаем новую группу
+        if (!group_exist) {
+            let counter = $(".generated-image-group-preview").length + 1;
+
+            let new_group_preview = $('<div data-bs-toggle="modal">');
+            new_group_preview.addClass("generated-image-group-preview");
+            new_group_preview.attr("data-bs-target", "#modal-" + counter);
+            new_group_preview.attr("data-prompt", response.prompt);
+            new_group_preview.attr("id", "preview-" + counter);
+            new_group_preview.removeClass("blank");
+            new_group_preview.prepend(new_preview);
+            $("#collection-content").prepend(new_group_preview);
+
+            let new_group_modal = $(".generated-image-group-modal.blank").clone();
+            new_group_modal.removeClass("blank");
+            new_group_modal.attr("id", "modal-" + counter);
+            new_group_modal.find(".carousel").attr("id", "carousel-" + counter);
+            new_group_modal.find(".carousel-control-prev").attr("data-bs-target", "#carousel-" + counter).hide();
+            new_group_modal.find(".carousel-control-next").attr("data-bs-target", "#carousel-" + counter).hide();
+
+            let new_item = new_group_modal.find(".carousel-item");
+            fillNewItem(new_item, response);
+
+            $("main").append(new_group_modal);
+            $("#collection_section").removeClass("hidden");
         }
-        else {
-            new_modal.find(".neg_prompt").closest("p").remove();
+
+        function fillNewItem(new_item, response) {
+            new_item.find(".generated-image-container img").attr("src", response.image_url);
+            new_item.find(".prompt").text(response.prompt);
+            if (response.neg_prompt) {
+                new_item.find(".neg_prompt").text(response.neg_prompt);
+            }
+            else new_item.find(".neg_prompt").closest("p").remove();
+            new_item.find(".delete-saved-image-btn").attr("data-item-id", response.id);
+            new_item.find(".repeat-saved-prompt-btn").on("click", repeatPromptFromCollection);
+            new_item.find(".delete-saved-image-btn").on("click", deleteImageFromCollection);
         }
-        $("#collection-content").prepend(new_modal);
-        $("#collection-content").prepend(new_preview);
-        new_modal.find(".repeat-saved-prompt-btn").on("click", repeatPromptFromCollection);
-        new_modal.find(".delete-saved-image-btn").on("click", deleteImageFromCollection);
-        $("#collection_section").removeClass("hidden");
     });
 
     request.fail(function(response) {
@@ -390,18 +431,41 @@ function deleteImageFromCollection() {
     // удаляет результат генерации из коллекции пользователя
     console.log("deleteImageFromCollection")
 
-    let modal = $(this).closest(".generated-image-modal");
-    let imageID = modal.data("id");
+    let modal = $(this).closest(".generated-image-group-modal");
+    let item = $(this).closest(".carousel-item");
+    let imageID = $(this).attr("data-item-id");
     let request = deleteImageRequest(imageID);
 
     request.done(function() {
         showSuccessAlert("Картина удалена из коллекции");
-        // удалить картину со страницы
+        // закрыть модальное окно
         modal.find(".btn-close").trigger("click");
-        modal.remove();
-        $("#generated-image-preview-"+imageID).remove();
+
+        // удалить элемент из модального окна
+        item.remove();
+        // если не осталось элементов - удалить модальное окно
+        if (modal.find(".carousel-item").length == 0) {
+            modal.remove();
+        }
+        else if ((modal.find(".carousel-item").length == 1)) {
+            modal.find(".carousel-control-prev").hide();
+            modal.find(".carousel-control-next").hide();
+            modal.find(".carousel-item").addClass("active");
+        }
+        else {
+            modal.find(".carousel-item").first().addClass("active");
+        }
+
+        let preview = $("#generated-image-preview-" + imageID);
+        let preview_group = preview.closest(".generated-image-group-preview");
+        preview.remove();
+
+        if (preview_group.find("img").length == 0) {
+            preview_group.remove();
+        }
+
         // скрыть коллекцию, если не осталось картин
-        let left_imgs = $("#collection-content .generated-image-preview").length;
+        let left_imgs = $("#collection-content .generated-image-group-preview").length;
         if (left_imgs == 0) {
             $("#collection_section").addClass("hidden");
         }
@@ -410,6 +474,18 @@ function deleteImageFromCollection() {
     request.fail(function(response) {
         showDangerAlert(response.status + " " + response.responseText);
     });
+}
+
+function controlArrowsInModalGroups() {
+    // скрывает стрелки влево-вправо, если элемент в модальном окне один
+
+    $(".generated-image-group-modal .carousel").each(function() {
+        let items = $(this).find(".carousel-item");
+        if (items.length < 2) {
+            $(this).find(".carousel-control-prev").hide();
+            $(this).find(".carousel-control-next").hide();
+        }
+    })
 }
 
 

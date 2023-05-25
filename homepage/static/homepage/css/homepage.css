@@ -92,15 +92,19 @@
 }
 .carousel-caption {
     display: block;
-    position: static !important;
+    position: relative !important;
     margin-left: auto;
     margin-right: auto;
     background-color: #ffffffd6;
     color: black !important;
-    margin-top: 1.25rem;
     border-radius: var(--bs-border-radius-lg);
+    margin-top: 1.5rem;
     padding: 1.25rem;
     width: fit-content;
+    z-index: 2;
+    left: unset !important;
+    right: unset !important;
+    bottom: unset !important;
 }
 .carousel-inner {
     overflow: visible !important;
